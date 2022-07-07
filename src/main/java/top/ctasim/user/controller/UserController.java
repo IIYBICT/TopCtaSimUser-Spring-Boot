@@ -107,7 +107,7 @@ public class UserController {
     }
 
     /**
-     * 登录接口 1
+     * 登录接口
      *
      * @param call     可邮箱 用户名 呼号登录
      * @param password 密码
