@@ -106,7 +106,6 @@ public class UserController {
         return ResultJson.ok().data("isRegister", res);
     }
 
-    
     /**
      * 登录接口
      *
