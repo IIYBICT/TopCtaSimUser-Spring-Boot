@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.ctasim.user.mapper.ActivateEmailMapper">
+
+    <resultMap id="BaseResultMap" type="top.ctasim.user.entity.ActivateEmail">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="sjs" column="sjs" jdbcType="VARCHAR"/>
+        <result property="isActivate" column="is_activate" jdbcType="INTEGER"/>
+        <result property="expireTime" column="expire_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,username,email,
+        sjs,is_activate, expire_time
+    </sql>
+    <select id="selectOneByEmail" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from activate_email
+        where
+        email = #{email,jdbcType=VARCHAR}
+    </select>
+    <select id="selectAllBySjs" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from activate_email
+        where
+        sjs = #{sjs,jdbcType=VARCHAR}
+    </select>
+    <update id="updateIsActivateBySjs">
+        update activate_email
+        set is_activate = #{isActivate,jdbcType=NUMERIC}
+        where sjs = #{sjs,jdbcType=VARCHAR}
+    </update>
+    <update id="updateExpireTimeAndSjsByEmail">
+        update activate_email
+        set expire_time = #{expireTime},
+            sjs         = #{sjs,jdbcType=VARCHAR}
+        where email = #{email,jdbcType=VARCHAR}
+    </update>
+</mapper>

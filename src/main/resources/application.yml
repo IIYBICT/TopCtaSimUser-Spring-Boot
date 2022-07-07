@@ -1,0 +1,38 @@
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  datasource:
+    dynamic:
+      primary: mysql1
+      strict: false
+      datasource:
+        mysql1:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/cta?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+          username: root
+          password: 12345678
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: top.ctasim.user.entity
+
+logging:
+  level:
+    com:
+      springboot:
+        mapper: debug
+config:
+  rootPath: /Users/iiybict/Documents/wwwroot/sim.ctasim.top/
+  activateUrl: http://user.ctasim.top/#/activate/email?sjs=
+  changeEmailUrl: http://user.ctasim.top/#/change/email/password?sjs=
+
+server:
+  port: 8080

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>重置您的 无敌软件的 密码</title>
+
+    <!--    <style>-->
+    <!--        body, html, div, ul, li, button, p, img, h1, h2, h3, h4, h5, h6 {-->
+    <!--            margin: 0;-->
+    <!--            padding: 0;-->
+    <!--        }-->
+
+    <!--        body, html {-->
+    <!--            background: #fff;-->
+    <!--            line-height: 1.8;-->
+    <!--        }-->
+
+    <!--        h1, h2, h3, h4, h5, h6 {-->
+    <!--            line-height: 1.8;-->
+    <!--        }-->
+
+    <!--        .email_warp {-->
+    <!--            height: 100vh;-->
+    <!--            min-height: 500px;-->
+    <!--            font-size: 14px;-->
+    <!--            color: #212121;-->
+    <!--            display: flex;-->
+    <!--            /* align-items: center; */-->
+    <!--            justify-content: center;-->
+    <!--        }-->
+
+    <!--        .logo {-->
+    <!--            margin: 3em auto;-->
+    <!--            width: 200px;-->
+    <!--            height: 60px;-->
+    <!--        }-->
+
+    <!--        h1.email-title {-->
+    <!--            font-size: 26px;-->
+    <!--            font-weight: 500;-->
+    <!--            margin-bottom: 15px;-->
+    <!--            color: #252525;-->
+    <!--        }-->
+
+    <!--        a.links_btn {-->
+    <!--            border: 0;-->
+    <!--            background: #4C84FF;-->
+    <!--            color: #fff;-->
+    <!--            width: 100%;-->
+    <!--            height: 50px;-->
+    <!--            line-height: 50px;-->
+    <!--            font-size: 16px;-->
+    <!--            margin: 40px auto;-->
+    <!--            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.15);-->
+    <!--            border-radius: 4px;-->
+    <!--            outline: none;-->
+    <!--            cursor: pointer;-->
+    <!--            transition: all 0.3s;-->
+    <!--            text-align: center;-->
+    <!--            display: block;-->
+    <!--            text-decoration: none;-->
+    <!--        }-->
+
+    <!--        .warm_tips {-->
+    <!--            color: #757575;-->
+    <!--            background: #f7f7f7;-->
+    <!--            padding: 20px;-->
+    <!--        }-->
+
+    <!--        .warm_tips .desc {-->
+    <!--            margin-bottom: 20px;-->
+    <!--        }-->
+
+    <!--        .qr_warp {-->
+    <!--            max-width: 140px;-->
+    <!--            margin: 20px auto;-->
+    <!--        }-->
+
+    <!--        .qr_warp img {-->
+    <!--            max-width: 100%;-->
+    <!--            max-height: 100%;-->
+    <!--        }-->
+
+    <!--        .email-footer {-->
+    <!--            margin-top: 2em;-->
+    <!--        }-->
+
+    <!--        #reset-password-email {-->
+    <!--            max-width: 500px;-->
+    <!--        }-->
+
+    <!--        #reset-password-email .accout_email {-->
+    <!--                color: #4C84FF;-->
+    <!--                display: block;-->
+    <!--                margin-bottom: 20px;-->
+    <!--        }-->
+    <!--    </style>-->
+</head>
+
+<body>
+<section style="height: 100vh;
+            min-height: 500px;
+            font-size: 14px;
+            color: #212121;
+            display: flex;
+            /* align-items: center; */
+            justify-content: center;">
+    <div style="max-width: 500px;">
+
+        <h3 style="font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #252525;">
+            尊敬的<span th:text="${emailParam.username}"></span>(<span th:text="${emailParam.call}"></span>)您好：
+        </h3>
+        <p>您正在为：<span th:text="${emailParam.username}"></span>(<span th:text="${emailParam.call}"></span>)请求验证邮箱：
+        </p>
+        <b style="color: #4C84FF;
+                display: block;
+                margin-bottom: 20px;"><span th:text="${emailParam.email}"></span></b>
+
+        <p>请注意，如果这不是您本人的操作，请忽略并关闭此邮件。</p>
+        <p>如您确认本人操作，请点击下方按钮。</p>
+
+        <a style="border: 0;
+            background: #4C84FF;
+            color: #fff;
+            width: 100%;
+            height: 50px;
+            line-height: 50px;
+            font-size: 16px;
+            margin: 40px auto;
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            display: block;
+            text-decoration: none;" th:href="${emailParam.url}">验证邮箱</a>
+
+        <div style="color: #757575;
+            background: #f7f7f7;
+            padding: 20px;">
+            <div class="desc">
+                为安全起见，以上按钮为一次性链接，且仅在15分钟内有效，请您尽快完成操作。
+            </div>
+            <div style="margin-bottom: 20px;">
+                如上方按钮无法点击请点击下方链接： <br>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <a th:href="${emailParam.url}"><span th:text="${emailParam.url}"></span></a>
+            </div>
+
+            <p>如有任何疑问或无法完成操作，请通过如下方式与我们联系：</p>
+            <p>邮箱：630061561@qq.com</p>
+            <p>本邮件由系统自动发送，请勿回复。</p>
+        </div>
+
+        <div style="margin-top: 2em;">
+            <p>CTAsim团队</p>
+        </div>
+    </div>
+</section>
+</body>
+
+</html>

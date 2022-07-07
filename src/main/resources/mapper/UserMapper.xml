@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.ctasim.user.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="top.ctasim.user.entity.User">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userCall" column="user_call" jdbcType="VARCHAR"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="groupId" column="group_id" jdbcType="INTEGER"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="qq" column="qq" jdbcType="VARCHAR"/>
+        <result property="registerTime" column="register_time" jdbcType="TIMESTAMP"/>
+        <result property="lastLoginTime" column="last_login_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,user_call,username,
+        password,group_id,email,
+        qq,register_time,last_login_time
+    </sql>
+    <select id="selectAllByEmail" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from users
+        where
+        email = #{email,jdbcType=VARCHAR}
+    </select>
+    <select id="selectAllByUsername" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from users
+        where
+        username = #{username,jdbcType=VARCHAR}
+    </select>
+    <select id="selectAllByUserCall" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from users
+        where
+        user_call = #{userCall,jdbcType=VARCHAR}
+    </select>
+    <select id="selectOneByUsername" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from users
+        where
+        username = #{username,jdbcType=VARCHAR}
+    </select>
+    <select id="selectOneByEmail" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from users
+        where
+        email = #{email,jdbcType=VARCHAR}
+    </select>
+    <select id="selectOneByUserCall" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from users
+        where
+        user_call = #{userCall,jdbcType=VARCHAR}
+    </select>
+    <update id="updatePasswordByUsername">
+        update users
+        set password = #{password,jdbcType=VARCHAR}
+        where username = #{username,jdbcType=VARCHAR}
+    </update>
+    <update id="updatePasswordByEmail">
+        update users
+        set password = #{password,jdbcType=VARCHAR}
+        where email = #{email,jdbcType=VARCHAR}
+    </update>
+</mapper>

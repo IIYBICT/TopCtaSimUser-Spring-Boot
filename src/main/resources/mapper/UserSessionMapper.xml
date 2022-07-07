@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.ctasim.user.mapper.UserSessionMapper">
+
+    <resultMap id="BaseResultMap" type="top.ctasim.user.entity.UserSession">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="username" column="username" jdbcType="VARCHAR"/>
+            <result property="token" column="token" jdbcType="VARCHAR"/>
+            <result property="loginTime" column="login_time" jdbcType="TIMESTAMP"/>
+            <result property="expireTime" column="expire_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,username,token,
+        login_time,expire_time
+    </sql>
+    <delete id="delByUsername">
+        delete
+        from user_session
+        where username = #{username,jdbcType=VARCHAR}
+    </delete>
+    <select id="selectOneByToken" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_session
+        where
+        token = #{token,jdbcType=VARCHAR}
+    </select>
+    <select id="findAllByToken" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_session
+        where
+        token = #{token,jdbcType=VARCHAR}
+    </select>
+</mapper>
