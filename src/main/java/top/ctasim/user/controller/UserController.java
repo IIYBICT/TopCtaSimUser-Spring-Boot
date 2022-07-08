@@ -183,13 +183,29 @@ public class UserController {
         FileReader fileReader1 = new FileReader(FileUtil.file(rootPath + "conf/cert.txt"));
         String result = fileReader1.readString();
         String[] certList = result.split("\r\n");
+        FileReader ratingFileReader = new FileReader(FileUtil.file(rootPath + "rating.txt"));
+        String ratingData = ratingFileReader.readString();
+        String[] ratingList = ratingData.split("\r\n");
         for (String item : certList) {
             String[] itemInfo = item.split(" ");
             if (itemInfo[0].equals(userData.getUserCall())) {
-                data.put("activateCall", new Integer(itemInfo[2].trim()));
+//                data.put("activateCall", new Integer(itemInfo[2].trim()));
+                for (String ratingItem : ratingList) {
+                    String[] ratingItemInfo = ratingItem.split(" ");
+
+                    if (ratingItemInfo[0].equals(itemInfo[2].trim())) {
+                        data.put("ratingId", new Integer(ratingItemInfo[0].trim()));
+                        data.put("ratingName", ratingItemInfo[2].trim());
+                        data.put("ratingNameEn", ratingItemInfo[1].trim());
+                    }
+                }
             }
+
         }
-        data.putIfAbsent("activateCall", null);
+//        data.putIfAbsent("activateCall", null);
+        data.putIfAbsent("ratingId", null);
+        data.putIfAbsent("ratingName", null);
+        data.putIfAbsent("ratingNameEn", null);
         data.remove("password");
         data.put("groupName", userGroup1.getGroupName());
         data.put("IsActivate", activateEmail.getIsActivate() == 1);
