@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.ctasim.user.mapper.RailActivityUserMapper">
+
+    <resultMap id="BaseResultMap" type="top.ctasim.user.entity.RailActivityUser">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="railName" column="rail_name" jdbcType="VARCHAR"/>
+            <result property="username" column="username" jdbcType="VARCHAR"/>
+            <result property="activityId" column="activity_id" jdbcType="INTEGER"/>
+            <result property="type" column="type" jdbcType="VARCHAR"/>
+            <result property="iocoType" column="ioco_type" jdbcType="VARCHAR"/>
+            <result property="bottomType" column="bottom_type" jdbcType="VARCHAR"/>
+            <result property="length" column="length" jdbcType="VARCHAR"/>
+            <result property="sum" column="sum" jdbcType="VARCHAR"/>
+            <result property="explain" column="explain" jdbcType="VARCHAR"/>
+            <result property="signTime" column="sign_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,rail_name,username,
+        activity_id,type,ioco_type,
+        bottom_type,length,sum,
+        explain,sign_time
+    </sql>
+</mapper>
