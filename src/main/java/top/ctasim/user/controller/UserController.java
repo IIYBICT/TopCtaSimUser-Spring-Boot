@@ -237,6 +237,11 @@ public class UserController {
         FileReader fileReader1 = new FileReader(FileUtil.file(rootPath + "conf/cert.txt"));
         String result = fileReader1.readString();
         String[] certList = result.split("\r\n");
+
+        FileReader ratingFileReader = new FileReader(FileUtil.file(rootPath + "rating.txt"));
+        String ratingData = ratingFileReader.readString();
+        String[] ratingList = ratingData.split("\r\n");
+
         List<User> userList = userService.list();
         List<UserNew> userNewList = new ArrayList<>();
         for (User user : userList) {
@@ -257,7 +262,14 @@ public class UserController {
             for (String item : certList) {
                 String[] itemInfo = item.split(" ");
                 if (itemInfo[0].equals(userData.getUserCall())) {
-                    userNew.setActivateCall(new Integer(itemInfo[2].trim()));
+                    for (String ratingItem : ratingList) {
+                        String[] ratingItemInfo = ratingItem.split(" ");
+                        if (ratingItemInfo[0].equals(itemInfo[2].trim())) {
+                            userNew.setRatingId(new Integer(ratingItemInfo[0].trim()));
+                            userNew.setRatingName(ratingItemInfo[2].trim());
+                            userNew.setRatingNameEn(ratingItemInfo[1].trim());
+                        }
+                    }
                 }
             }
             userNewList.add(userNew);
