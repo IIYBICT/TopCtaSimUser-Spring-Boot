@@ -29,4 +29,6 @@ public interface UserService extends IService<User> {
     User selectOneByUserCall(String userCall);
 
     void updatePasswordByUsername(String username, String password);
+
+    void updateLastLoginTimeByUserName(String username);
 }

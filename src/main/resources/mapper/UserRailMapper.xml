@@ -41,4 +41,10 @@
         where
         rail_name = #{railName,jdbcType=VARCHAR}
     </select>
+    <update id="updateRailNameAndStateById">
+        update user_rail
+        set rail_name = #{railName,jdbcType=VARCHAR},
+            state     = #{state,jdbcType=NUMERIC}
+        where id = #{id,jdbcType=NUMERIC}
+    </update>
 </mapper>

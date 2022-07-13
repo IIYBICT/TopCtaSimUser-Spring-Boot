@@ -74,4 +74,9 @@
         set password = #{password,jdbcType=VARCHAR}
         where email = #{email,jdbcType=VARCHAR}
     </update>
+    <update id="updateLastLoginTimeByUsername">
+        update users
+        set last_login_time = #{lastLoginTime}
+        where username = #{username,jdbcType=VARCHAR}
+    </update>
 </mapper>

@@ -21,6 +21,8 @@ public interface UserRailMapper extends BaseMapper<UserRail> {
 
     List<UserRail> findAllByRailName(@Param("railName") String railName);
 
+    int updateRailNameAndStateById(@Param("railName") String railName, @Param("state") Integer state, @Param("id") Integer id);
+
     @Override
     int update(UserRail entity, Wrapper<UserRail> updateWrapper);
 

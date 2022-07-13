@@ -36,6 +36,11 @@ public class UserRailServiceImpl extends ServiceImpl<UserRailMapper, UserRail>
         return userRailMapper.findAllByRailName(railName);
     }
 
+    @Override
+    public int updateRailNameAndStateById(String railName, Integer state, Integer id) {
+        return userRailMapper.updateRailNameAndStateById(railName, state, id);
+    }
+
 }
 
 

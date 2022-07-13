@@ -17,4 +17,6 @@ public interface UserRailService extends IService<UserRail> {
     List<UserRail> findAllByUsername(String username);
 
     List<UserRail> findAllByRailName(String railName);
+
+    int updateRailNameAndStateById(String railName, Integer state, Integer id);
 }

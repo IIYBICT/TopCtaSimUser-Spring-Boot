@@ -144,6 +144,7 @@ public class UserController {
         userSession.setExpireTime(newDate2);
         userSessionService.delByUsername(user.getUsername());
         userSessionService.save(userSession);
+        userService.updateLastLoginTimeByUserName(user.getUsername());
         return ResultJson.ok().data("token", token).data("userId", user.getId());
     }
 
@@ -322,8 +323,6 @@ public class UserController {
         UserSession userSession = userSessionService.selectOneByToken(token);
         User userData = userService.selectOneByUsername(userSession.getUsername());
         ActivateEmail activateEmail = activateEmailService.selectOneByEmail(userData.getEmail());
-//        int c = RandomUtil.randomInt(20, 50);
-//        String sjs = RandomUtil.randomString(c);
         Date date = new Date();
         int slat = RandomUtil.randomInt(20, 50);
         String sjs = DigestUtils.md5DigestAsHex((userData.getEmail() + userData.getUserCall() + slat + userData.getPassword() + date.getTime()).getBytes());

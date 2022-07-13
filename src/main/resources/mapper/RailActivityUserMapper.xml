@@ -5,23 +5,38 @@
 <mapper namespace="top.ctasim.user.mapper.RailActivityUserMapper">
 
     <resultMap id="BaseResultMap" type="top.ctasim.user.entity.RailActivityUser">
-            <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="railName" column="rail_name" jdbcType="VARCHAR"/>
-            <result property="username" column="username" jdbcType="VARCHAR"/>
-            <result property="activityId" column="activity_id" jdbcType="INTEGER"/>
-            <result property="type" column="type" jdbcType="VARCHAR"/>
-            <result property="iocoType" column="ioco_type" jdbcType="VARCHAR"/>
-            <result property="bottomType" column="bottom_type" jdbcType="VARCHAR"/>
-            <result property="length" column="length" jdbcType="VARCHAR"/>
-            <result property="sum" column="sum" jdbcType="VARCHAR"/>
-            <result property="explain" column="explain" jdbcType="VARCHAR"/>
-            <result property="signTime" column="sign_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="railName" column="rail_name" jdbcType="VARCHAR"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="activityId" column="activity_id" jdbcType="INTEGER"/>
+        <result property="busType" column="bus_type" jdbcType="VARCHAR"/>
+        <result property="iocoType" column="ioco_type" jdbcType="VARCHAR"/>
+        <result property="bottomType" column="bottom_type" jdbcType="VARCHAR"/>
+        <result property="busLength" column="bus_length" jdbcType="VARCHAR"/>
+        <result property="busSum" column="bus_sum" jdbcType="VARCHAR"/>
+        <result property="railExplain" column="rail_explain" jdbcType="VARCHAR"/>
+        <result property="signTime" column="sign_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,rail_name,username,
-        activity_id,type,ioco_type,
-        bottom_type,length,sum,
-        explain,sign_time
+        id
+        ,rail_name,username,
+        activity_id,bus_type,ioco_type,
+        bottom_type,bus_length,bus_sum,
+        rail_explain,sign_time
     </sql>
+    <select id="selectAllByUsername" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from rail_activity_user
+        where
+        username = #{username,jdbcType=VARCHAR}
+    </select>
+    <select id="selectAllByActivityId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from rail_activity_user
+        where
+        activity_id = #{activityId,jdbcType=NUMERIC}
+    </select>
 </mapper>

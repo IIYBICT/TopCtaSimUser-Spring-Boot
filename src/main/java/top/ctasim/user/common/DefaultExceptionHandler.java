@@ -76,11 +76,11 @@ public class DefaultExceptionHandler {
     /**
      * 其他异常统一处理
      */
-    @ExceptionHandler(value = Exception.class)
-    public ResponseEntity<ResultJson> exception(HttpServletRequest request, Exception e) {
-        this.logError(request, e);
-        return new ResponseEntity<ResultJson>(ResultJson.error().message("错误请求"), HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler(value = Exception.class)
+//    public ResponseEntity<ResultJson> exception(HttpServletRequest request, Exception e) {
+//        this.logError(request, e);
+//        return new ResponseEntity<ResultJson>(ResultJson.error().message("错误请求"), HttpStatus.BAD_REQUEST);
+//    }
 
     /**
      * 记录错误日志

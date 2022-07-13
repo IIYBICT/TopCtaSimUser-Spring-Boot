@@ -139,6 +139,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void updatePasswordByUsername(String username, String password) {
         userMapper.updatePasswordByUsername(username, password);
     }
+
+    @Override
+    public void updateLastLoginTimeByUserName(String username) {
+        userMapper.updateLastLoginTimeByUsername(new Date(), username);
+    }
 }
 
 

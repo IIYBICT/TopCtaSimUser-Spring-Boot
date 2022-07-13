@@ -49,22 +49,38 @@ public class RailController {
         if (userData == null) {
             return ResultJson.error().message("未登录或已token失效，请重新登录").code(202);
         }
-        UserRail userRailInfo = userRailService.findOneByUsername(userData.getUsername());
-        if (userRailInfo != null) {
-            return ResultJson.error().message("已经注册过了").code(202);
-        }
+//        UserRail userRailInfo = userRailService.findOneByUsername(userData.getUsername());
+//        if (userRailInfo != null) {
+//            if (userRailInfo.getState() != 2) {
+//                return ResultJson.error().message("已经注册过了");
+//            }
+//        }
         List<UserRail> userRails = userRailService.findAllByRailName(railName);
+        List<UserRail> userRailsByUserName = userRailService.findAllByUsername(userData.getUsername());
         if (userRails.size() > 0) {
-            return ResultJson.error().message("该连线账号已被使用或已记录为不可使用账号，请重新填写").code(202);
+            if (!userRails.get(0).getUsername().equals(userData.getUsername())) {
+                return ResultJson.error().message("该连线账号已被使用或已记录为不可使用账号，请重新填写");
+            }
         }
-        UserRail userRail = new UserRail();
-        userRail.setUsername(userData.getUsername());
-        userRail.setRailName(railName);
-        userRail.setActivitySum(0);
-        userRail.setConnectSum(0);
-        userRail.setState(0);
-        userRail.setRegisterTime(new Date());
-        userRailService.save(userRail);
+        if (userRailsByUserName.size() > 0) {
+            if (userRailsByUserName.get(0).getState() == 2) {
+                userRailService.updateRailNameAndStateById(railName, 0, userRailsByUserName.get(0).getId());
+            } else if (userRailsByUserName.get(0).getState() == 3) {
+                return ResultJson.error().message("您已成功注册连线账号，无需重复申请");
+            } else {
+                return ResultJson.error().message("您的账号整处于封禁或审核中，无法操作");
+            }
+        } else {
+            UserRail userRail = new UserRail();
+            userRail.setUsername(userData.getUsername());
+            userRail.setRailName(railName);
+            userRail.setActivitySum(0);
+            userRail.setConnectSum(0);
+            userRail.setState(0);
+            userRail.setRegisterTime(new Date());
+            userRailService.save(userRail);
+        }
+
         return ResultJson.ok().data("isRegister", true);
     }
 
@@ -88,7 +104,7 @@ public class RailController {
         }
         UserRail userRailInfo = userRailService.findOneByUsername(userData.getUsername());
         if (userRailInfo == null) {
-            return ResultJson.error().message("未登录或已token失效，请重新登录").code(202);
+            return ResultJson.error().message("您还没有注册连线呼号");
         }
         return ResultJson.ok().data(MapAndEntyUtil.entityToMap(userRailInfo));
     }
