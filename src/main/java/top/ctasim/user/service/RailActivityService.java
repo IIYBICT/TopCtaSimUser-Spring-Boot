@@ -19,9 +19,17 @@ public interface RailActivityService extends IService<RailActivity> {
 
     boolean deleteRailActivity(int id);
 
+    boolean delByActivityId(int id);
+
     RailActivity selectOneById(int id);
 
     List<RailActivity> selectAllSignRailActivity(String username);
 
     List<RailActivityUser> selectAllSignRailActivityList(Integer activityId);
+
+    boolean signIsRailActivity(Integer activityId, String username);
+
+    boolean signRailActivity(Integer activityId, String railName, String username, String busType, String iocoType, String bottomType, String busLength, String busSum, String railExplain);
+
+    boolean cancelSignRailActivity(Integer activityId, String railName, String username);
 }

@@ -16,6 +16,12 @@ public interface RailActivityUserMapper extends BaseMapper<RailActivityUser> {
     List<RailActivityUser> selectAllByUsername(@Param("username") String username);
 
     List<RailActivityUser> selectAllByActivityId(@Param("activityId") Integer activityId);
+
+    List<RailActivityUser> selectAllByActivityIdAndRailName(@Param("activityId") Integer activityId, @Param("railName") String railName);
+
+    int delByUsernameAndActivityId(@Param("username") String username, @Param("activityId") Integer activityId);
+
+    int delByActivityId(@Param("activityId") Integer activityId);
 }
 
 

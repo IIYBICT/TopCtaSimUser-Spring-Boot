@@ -3,10 +3,7 @@ package top.ctasim.user.controller;
 import cn.hutool.json.JSONUtil;
 import org.springframework.web.bind.annotation.*;
 import top.ctasim.user.entity.*;
-import top.ctasim.user.service.RailActivityService;
-import top.ctasim.user.service.UserGroupService;
-import top.ctasim.user.service.UserService;
-import top.ctasim.user.service.UserSessionService;
+import top.ctasim.user.service.*;
 import top.ctasim.user.utils.ResultJson;
 
 import javax.annotation.Resource;
@@ -21,6 +18,9 @@ public class RailActivityController {
     private RailActivityService railActivityService;
 
     @Resource
+    private UserRailService userRailService;
+
+    @Resource
     private UserService userService;
 
     @Resource
@@ -28,6 +28,9 @@ public class RailActivityController {
 
     @Resource
     private UserGroupService userGroupService;
+
+    @Resource
+    private ActivateEmailService activateEmailService;
 
 
     @PostMapping("/add")
@@ -83,7 +86,6 @@ public class RailActivityController {
             @RequestParam("otherExplain") String otherExplain,//其他说明
             @RequestParam("state") String state //活动状态
     ) {
-        System.out.println(activityTime);
         if (!userService.selectUserLoginExpireByUserIdAndToken(token)) {
             return ResultJson.error().message("未登录或已token失效，请重新登录").code(202);
         }
@@ -118,6 +120,7 @@ public class RailActivityController {
             return ResultJson.error().message("权限不足");
         }
         boolean res = railActivityService.deleteRailActivity(Integer.parseInt(id));
+        railActivityService.delByActivityId(Integer.parseInt(id));
         return ResultJson.ok().data("isDelete", res);
     }
 
@@ -131,7 +134,7 @@ public class RailActivityController {
     @GetMapping("/info")
     public ResultJson GetRailActivityInfo(
             String token, // 用户token
-            String id //活动id
+            Integer id //活动id
     ) {
         if (!userService.selectUserLoginExpireByUserIdAndToken(token)) {
             return ResultJson.error().message("未登录或已token失效，请重新登录").code(202);
@@ -141,7 +144,7 @@ public class RailActivityController {
         if (userData == null) {
             return ResultJson.error().message("未登录或已token失效，请重新登录").code(202);
         }
-        RailActivity railActivity = railActivityService.selectOneById(Integer.parseInt(id));
+        RailActivity railActivity = railActivityService.selectOneById(id);
         if (railActivity == null) {
             return ResultJson.error().message("活动不存在");
         }
@@ -246,4 +249,57 @@ public class RailActivityController {
         return ResultJson.ok().data("size", railActivityList.size()).data("data", railActivityList);
     }
 
+    @PostMapping("/sign/rail/activity")
+    public ResultJson SignRailActivity(
+            String token, // 用户token
+            Integer activityId, // 活动Id
+            String busType, // 车型
+            String iocoType, // Ioco类型
+            String bottomType, // 底板类型
+            String busLength, // 车长
+            String busSum, // 车数
+            String railExplain // 线路说明
+    ) {
+        if (!userService.selectUserLoginExpireByUserIdAndToken(token)) {
+            return ResultJson.error().message("未登录或已token失效，请重新登录").code(202);
+        }
+        UserSession userSession = userSessionService.selectOneByToken(token);
+        User userData = userService.selectOneByUsername(userSession.getUsername());
+        if (userData == null) {
+            return ResultJson.error().message("未登录或已token失效，请重新登录").code(202);
+        }
+        ActivateEmail activateEmail = activateEmailService.selectOneByEmail(userData.getEmail());
+        if (activateEmail.getIsActivate() != 1) {
+            return ResultJson.error().message("邮箱未验证，请先验证邮箱");
+        }
+        UserRail userRailInfo = userRailService.findOneByUsername(userData.getUsername());
+        System.out.println(userRailInfo);
+        if (railActivityService.signIsRailActivity(activityId, userData.getUsername())) {
+            return ResultJson.error().message("已经报名了");
+        }
+        boolean sign = railActivityService.signRailActivity(activityId, userRailInfo.getRailName(), userData.getUsername(), busType, iocoType, bottomType, busLength, busSum, railExplain);
+        return ResultJson.ok().data("isSign", sign);
+    }
+
+    @PostMapping("/cancel/sign")
+    public ResultJson SignRailActivity(
+            String token, // 用户token
+            Integer activityId // 活动Id
+    ) {
+        if (!userService.selectUserLoginExpireByUserIdAndToken(token)) {
+            return ResultJson.error().message("未登录或已token失效，请重新登录").code(202);
+        }
+        UserSession userSession = userSessionService.selectOneByToken(token);
+        User userData = userService.selectOneByUsername(userSession.getUsername());
+        if (userData == null) {
+            return ResultJson.error().message("未登录或已token失效，请重新登录").code(202);
+        }
+        ActivateEmail activateEmail = activateEmailService.selectOneByEmail(userData.getEmail());
+        if (activateEmail.getIsActivate() != 1) {
+            return ResultJson.error().message("邮箱未验证，请先验证邮箱");
+        }
+        UserRail userRailInfo = userRailService.findOneByUsername(userData.getUsername());
+        boolean res = railActivityService.cancelSignRailActivity(activityId, userRailInfo.getRailName(), userData.getUsername());
+        return ResultJson.ok().data("isCancelSign", true);
+    }
 }

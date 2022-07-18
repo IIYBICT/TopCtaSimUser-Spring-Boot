@@ -39,4 +39,23 @@
         where
         activity_id = #{activityId,jdbcType=NUMERIC}
     </select>
+    <select id="selectAllByActivityIdAndRailName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from rail_activity_user
+        where
+        activity_id = #{activityId,jdbcType=NUMERIC}
+        AND rail_name = #{railName,jdbcType=VARCHAR}
+    </select>
+    <delete id="delByUsernameAndActivityId">
+        delete
+        from rail_activity_user
+        where username = #{username,jdbcType=VARCHAR}
+          AND activity_id = #{activityId,jdbcType=NUMERIC}
+    </delete>
+    <delete id="delByActivityId">
+        delete
+        from rail_activity_user
+        where activity_id = #{activityId,jdbcType=NUMERIC}
+    </delete>
 </mapper>

@@ -12,4 +12,5 @@ public class UserNew extends User implements Serializable {
     private String ratingName;
     private String ratingNameEn;
     private Integer ratingId;
+    private boolean IsCallActivate;
 }

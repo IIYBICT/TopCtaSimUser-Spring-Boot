@@ -32,6 +32,21 @@ public class RailActivityUserServiceImpl extends ServiceImpl<RailActivityUserMap
     public List<RailActivityUser> selectAllByActivityId(Integer activityId) {
         return railActivityUserMapper.selectAllByActivityId(activityId);
     }
+
+    @Override
+    public List<RailActivityUser> selectAllByActivityIdAndRailName(Integer activityId, String railName) {
+        return railActivityUserMapper.selectAllByActivityIdAndRailName(activityId, railName);
+    }
+
+    @Override
+    public int delByUsernameAndActivityId(String username, Integer activityId) {
+        return railActivityUserMapper.delByUsernameAndActivityId(username, activityId);
+    }
+
+    @Override
+    public int delByActivityId(Integer activityId) {
+        return railActivityUserMapper.delByActivityId(activityId);
+    }
 }
 
 

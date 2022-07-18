@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileReader;
+import cn.hutool.core.io.file.FileWriter;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -46,6 +47,9 @@ public class UserController {
      */
     @Value("${config.rootPath}")
     private String rootPath;
+
+    @Value("${config.confPath}")
+    private String confPath;
 
     @Value("${config.activateUrl}")
     private String activateUrl;
@@ -150,7 +154,7 @@ public class UserController {
 
     @GetMapping("/cert")
     public ResultJson getCert() {
-        FileReader fileReader1 = new FileReader(FileUtil.file(rootPath + "conf/cert.txt"));
+        FileReader fileReader1 = new FileReader(FileUtil.file(confPath + "cert.txt"));
         String result1 = fileReader1.readString();
         FileReader fileReader2 = new FileReader(FileUtil.file(rootPath + "tshh.txt"));
         String result2 = fileReader2.readString();
@@ -181,7 +185,7 @@ public class UserController {
         UserGroup userGroup1 = userGroupService.selectOneById(userData.getGroupId());
         ActivateEmail activateEmail = activateEmailService.selectOneByEmail(userData.getEmail());
 
-        FileReader fileReader1 = new FileReader(FileUtil.file(rootPath + "conf/cert.txt"));
+        FileReader fileReader1 = new FileReader(FileUtil.file(confPath + "cert.txt"));
         String result = fileReader1.readString();
         String[] certList = result.split("\r\n");
         FileReader ratingFileReader = new FileReader(FileUtil.file(rootPath + "rating.txt"));
@@ -191,6 +195,7 @@ public class UserController {
             String[] itemInfo = item.split(" ");
             if (itemInfo[0].equals(userData.getUserCall())) {
 //                data.put("activateCall", new Integer(itemInfo[2].trim()));
+                data.put("IsCallActivate", !itemInfo[1].equals("NotActivate"));
                 for (String ratingItem : ratingList) {
                     String[] ratingItemInfo = ratingItem.split(" ");
 
@@ -207,10 +212,52 @@ public class UserController {
         data.putIfAbsent("ratingId", null);
         data.putIfAbsent("ratingName", null);
         data.putIfAbsent("ratingNameEn", null);
+        data.putIfAbsent("IsCallActivate", false);
         data.remove("password");
         data.put("groupName", userGroup1.getGroupName());
         data.put("IsActivate", activateEmail.getIsActivate() == 1);
         return ResultJson.ok().data(data);
+    }
+
+    @PostMapping("/activate/call")
+    public ResultJson ActivateCall(String token, String password) {
+        if (!userService.selectUserLoginExpireByUserIdAndToken(token)) {
+            return ResultJson.error().message("未登录或已token失效，请重新登录").code(202);
+        }
+        UserSession userSession = userSessionService.selectOneByToken(token);
+        User userData = userService.selectOneByUsername(userSession.getUsername());
+        if (userData == null) {
+            return ResultJson.error().message("未登录或已token失效，请重新登录").code(202);
+        }
+        ActivateEmail activateEmail = activateEmailService.selectOneByEmail(userData.getEmail());
+        if (activateEmail.getIsActivate() != 1) {
+            return ResultJson.error().message("邮箱未验证，请先验证邮箱");
+        }
+        if (password.equals("NotActive")) {
+            return ResultJson.error().message("该密码不合法").data("isActivate", false);
+        }
+        FileReader fileReader = new FileReader(FileUtil.file(confPath + "cert.txt"));
+        String result = fileReader.readString();
+        String certData = "";
+        String[] split = result.split("\r\n");
+        for (String item : split) {
+            String itemData = "";
+            String[] data = item.split(" ");
+            if (data[0].equals(userData.getUserCall())) {
+//                NotActive
+                if (data[1].equals("NotActive")) {
+                    itemData = data[0] + " " + password + " 1\r\n";
+                } else {
+                    return ResultJson.error().message("该号码已激活").data("isActivate", false);
+                }
+            } else {
+                itemData = data[0] + " " + data[1] + " " + data[2] + "\r\n";
+            }
+            certData += itemData;
+        }
+        FileWriter writer = new FileWriter(FileUtil.file(confPath + "cert.txt"));
+        writer.write(certData);
+        return ResultJson.ok().data("isActivate", true);
     }
 
     /**
@@ -235,7 +282,7 @@ public class UserController {
         if (userGroup.getIsAdmin() != 1) {
             return ResultJson.error().message("权限不足");
         }
-        FileReader fileReader1 = new FileReader(FileUtil.file(rootPath + "conf/cert.txt"));
+        FileReader fileReader1 = new FileReader(FileUtil.file(confPath + "cert.txt"));
         String result = fileReader1.readString();
         String[] certList = result.split("\r\n");
 
@@ -254,7 +301,7 @@ public class UserController {
             userNew.setEmail(user.getEmail());
             userNew.setQq(user.getQq());
             userNew.setGroupId(user.getGroupId());
-            UserGroup userGroup1 = userGroupService.selectOneById(userData.getGroupId());
+            UserGroup userGroup1 = userGroupService.selectOneById(user.getGroupId());
             userNew.setGroupName(userGroup1.getGroupName());
             userNew.setLastLoginTime(user.getLastLoginTime());
             userNew.setRegisterTime(user.getRegisterTime());
@@ -262,7 +309,8 @@ public class UserController {
             userNew.setIsActivate(activateEmail.getIsActivate() == 1);
             for (String item : certList) {
                 String[] itemInfo = item.split(" ");
-                if (itemInfo[0].equals(userData.getUserCall())) {
+                if (itemInfo[0].equals(user.getUserCall())) {
+                    userNew.setIsCallActivate(!itemInfo[1].equals("NotActive"));
                     for (String ratingItem : ratingList) {
                         String[] ratingItemInfo = ratingItem.split(" ");
                         if (ratingItemInfo[0].equals(itemInfo[2].trim())) {
@@ -303,6 +351,7 @@ public class UserController {
             return ResultJson.error().message("验证地址已过期");
         }
         activateEmailService.ActivateEmail(sjs);
+        userService.updateGroupIdByUsername(activateEmail.getUsername(), 3);
         return ResultJson.ok().data("isActivate", true);
     }
 
@@ -336,6 +385,9 @@ public class UserController {
             activateEmail1.setExpireTime(newDate2);
             activateEmailService.save(activateEmail1);
         } else {
+            if (activateEmail.getIsActivate() == 1) {
+                return ResultJson.error().message("已经验证了，无需重复验证");
+            }
             Calendar calendar = new GregorianCalendar();
             calendar.setTime(date);
             if (activateEmail.getExpireTime().after(calendar.getTime())) {

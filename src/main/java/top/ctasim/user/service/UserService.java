@@ -31,4 +31,10 @@ public interface UserService extends IService<User> {
     void updatePasswordByUsername(String username, String password);
 
     void updateLastLoginTimeByUserName(String username);
+
+    void updateGroupIdByUsername(String username, Integer groupId);
+
+    User selectOneById(Integer id);
+
+    boolean UpdateUserInfo(User userInfo, Integer userId);
 }

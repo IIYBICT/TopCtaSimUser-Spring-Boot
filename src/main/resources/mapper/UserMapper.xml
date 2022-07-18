@@ -79,4 +79,16 @@
         set last_login_time = #{lastLoginTime}
         where username = #{username,jdbcType=VARCHAR}
     </update>
+    <update id="updateGroupIdByUsername">
+        update users
+        set group_id = #{groupId,jdbcType=NUMERIC}
+        where username = #{username,jdbcType=VARCHAR}
+    </update>
+    <select id="selectOneById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from users
+        where
+        id = #{id,jdbcType=NUMERIC}
+    </select>
 </mapper>

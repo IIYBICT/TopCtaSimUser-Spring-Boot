@@ -1,10 +1,10 @@
 package top.ctasim.user.mapper;
-import java.util.Date;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import top.ctasim.user.entity.User;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,6 +32,10 @@ public interface UserMapper extends BaseMapper<User> {
     int updatePasswordByEmail(@Param("password") String password, @Param("email") String email);
 
     int updateLastLoginTimeByUsername(@Param("lastLoginTime") Date lastLoginTime, @Param("username") String username);
+
+    int updateGroupIdByUsername(@Param("groupId") Integer groupId, @Param("username") String username);
+
+    User selectOneById(@Param("id") Integer id);
 
     @Override
     int insert(User entity);

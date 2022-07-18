@@ -1,9 +1,11 @@
 package top.ctasim.user.controller;
 
 import org.springframework.web.bind.annotation.*;
+import top.ctasim.user.entity.ActivateEmail;
 import top.ctasim.user.entity.User;
 import top.ctasim.user.entity.UserRail;
 import top.ctasim.user.entity.UserSession;
+import top.ctasim.user.service.ActivateEmailService;
 import top.ctasim.user.service.UserRailService;
 import top.ctasim.user.service.UserService;
 import top.ctasim.user.service.UserSessionService;
@@ -28,6 +30,9 @@ public class RailController {
     @Resource
     private UserRailService userRailService;
 
+    @Resource
+    private ActivateEmailService activateEmailService;
+
 
     /**
      * 注册连线账号
@@ -48,6 +53,10 @@ public class RailController {
         User userData = userService.selectOneByUsername(userSession.getUsername());
         if (userData == null) {
             return ResultJson.error().message("未登录或已token失效，请重新登录").code(202);
+        }
+        ActivateEmail activateEmail = activateEmailService.selectOneByEmail(userData.getEmail());
+        if (activateEmail.getIsActivate() != 1) {
+            return ResultJson.error().message("请先激活邮箱");
         }
 //        UserRail userRailInfo = userRailService.findOneByUsername(userData.getUsername());
 //        if (userRailInfo != null) {

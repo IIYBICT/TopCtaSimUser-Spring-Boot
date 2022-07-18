@@ -43,6 +43,11 @@ public class ActivateEmailServiceImpl extends ServiceImpl<ActivateEmailMapper, A
     public int updateExpireTimeAndSjsByEmail(Date expireTime, String sjs, String email) {
         return activateEmailMapper.updateExpireTimeAndSjsByEmail(expireTime, sjs, email);
     }
+
+    @Override
+    public int delByEmail(String email) {
+        return activateEmailMapper.delByEmail(email);
+    }
 }
 
 

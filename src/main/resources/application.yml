@@ -9,9 +9,15 @@ spring:
       datasource:
         mysql1:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://localhost:3306/cta?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
-          username: root
-          password: 12345678
+          #          url: jdbc:mysql://47.242.29.26:3306/cta2?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+          #          username: cta2
+          #          password: XcXHWSfL5NfYfjsa
+          url: jdbc:mysql://127.0.0.1:3306/cta2?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+          username: cta2
+          password: XcXHWSfL5NfYfjsa
+#          url: jdbc:mysql://127.0.0.1:3306/cta?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+#          username: root
+#          password: 12345678
 
 mybatis-plus:
   configuration:
@@ -30,8 +36,14 @@ logging:
       springboot:
         mapper: debug
 config:
-  rootPath: /Users/iiybict/Documents/wwwroot/sim.ctasim.top/
-  activateUrl: http://user.ctasim.top/#/activate/email?sjs=
+  #  rootPath: /Users/iiybict/Documents/wwwroot/sim.ctasim.top/
+  #  confPath: /Users/iiybict/Documents/wwwroot/sim.ctasim.top/
+  rootPath: c:\\wwwroot\\sim.ctasim.top\\
+  confPath: c:\\wwwroot\\sim.ctasim.top\\conf\\
+  #  activateUrl: http://192.168.101.82:3001/activate/email/
+  #  changeEmailUrl: http://user.ctasim.top/#/change/email/password?sjs=
+  #
+  activateUrl: http://user.ctasim.top/activate/email/
   changeEmailUrl: http://user.ctasim.top/#/change/email/password?sjs=
 
 server:

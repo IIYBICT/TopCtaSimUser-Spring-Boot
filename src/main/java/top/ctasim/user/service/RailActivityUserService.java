@@ -15,4 +15,10 @@ public interface RailActivityUserService extends IService<RailActivityUser> {
     List<RailActivityUser> selectAllByUsername(String username);
 
     List<RailActivityUser> selectAllByActivityId(Integer activityId);
+
+    List<RailActivityUser> selectAllByActivityIdAndRailName(Integer activityId, String railName);
+
+    int delByUsernameAndActivityId(String username, Integer activityId);
+
+    int delByActivityId(Integer activityId);
 }

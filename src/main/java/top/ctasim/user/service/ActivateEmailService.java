@@ -18,6 +18,8 @@ public interface ActivateEmailService extends IService<ActivateEmail> {
     List<ActivateEmail> selectAllBySjs(String sjs);
 
     void ActivateEmail(String sjs);
-    
+
     int updateExpireTimeAndSjsByEmail(Date expireTime, String sjs, String email);
+
+    int delByEmail(String email);
 }

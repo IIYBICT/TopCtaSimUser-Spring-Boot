@@ -37,7 +37,7 @@ public class RailActivityServiceImpl extends ServiceImpl<RailActivityMapper, Rai
         RailActivity railActivity = new RailActivity();
         railActivity.setRailName(name);
         railActivity.setStage(stage);
-        railActivity.setActivityTime(DateUtil.parse(time, "yyyy-MM-dd"));
+        railActivity.setActivityTime(DateUtil.parse(time, "yyyy-MM-dd HH:mm:ss"));
         railActivity.setLine(line);
         railActivity.setSection(section);
         railActivity.setActivityStart(start);
@@ -79,7 +79,13 @@ public class RailActivityServiceImpl extends ServiceImpl<RailActivityMapper, Rai
 
     @Override
     public boolean deleteRailActivity(int id) {
+
         return railActivityMapper.delById(id) > 0;
+    }
+
+    @Override
+    public boolean delByActivityId(int id) {
+        return railActivityUserService.delByActivityId(id) > 0;
     }
 
     @Override
@@ -101,6 +107,34 @@ public class RailActivityServiceImpl extends ServiceImpl<RailActivityMapper, Rai
     @Override
     public List<RailActivityUser> selectAllSignRailActivityList(Integer activityId) {
         return railActivityUserService.selectAllByActivityId(activityId);
+    }
+
+    @Override
+    public boolean signIsRailActivity(Integer activityId, String username) {
+        List<RailActivityUser> railActivityUsers = railActivityUserService.selectAllByActivityIdAndRailName(activityId, username);
+        return railActivityUsers.size() > 0;
+    }
+
+    @Override
+    public boolean signRailActivity(Integer activityId, String railName, String username, String busType, String iocoType, String bottomType, String busLength, String busSum, String railExplain) {
+        RailActivityUser railActivityUser = new RailActivityUser();
+        railActivityUser.setActivityId(activityId);
+        railActivityUser.setRailName(railName);
+        railActivityUser.setUsername(username);
+        railActivityUser.setBusType(busType);
+        railActivityUser.setIocoType(iocoType);
+        railActivityUser.setBottomType(bottomType);
+        railActivityUser.setBusLength(busLength);
+        railActivityUser.setBusSum(busSum);
+        railActivityUser.setRailExplain(railExplain);
+        railActivityUser.setSignTime(new Date());
+        return railActivityUserService.save(railActivityUser);
+    }
+
+    @Override
+    public boolean cancelSignRailActivity(Integer activityId, String railName, String username) {
+        int res = railActivityUserService.delByUsernameAndActivityId(username, activityId);
+        return res > 0;
     }
 }
 

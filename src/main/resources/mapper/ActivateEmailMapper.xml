@@ -43,4 +43,9 @@
             sjs         = #{sjs,jdbcType=VARCHAR}
         where email = #{email,jdbcType=VARCHAR}
     </update>
+    <delete id="delByEmail">
+        delete
+        from activate_email
+        where email = #{email,jdbcType=VARCHAR}
+    </delete>
 </mapper>

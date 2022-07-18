@@ -8,6 +8,7 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.extra.mail.MailUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private UserMapper userMapper;
     @Value("${config.rootPath}")
     private String rootPath;
+
+    @Value("${config.confPath}")
+    private String confPath;
 
     @Resource
     private ActivateEmailService activateEmailService;
@@ -79,7 +83,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public boolean AddUser(String call, String username, String password, String email, String qq) {
-        FileAppender appender = new FileAppender(FileUtil.file(rootPath + "conf/cert.txt"), 16, true);
+        FileAppender appender = new FileAppender(FileUtil.file(confPath + "cert.txt"), 16, true);
         appender.append(call + " NotActive 0");
         appender.flush();
         int c = RandomUtil.randomInt(20, 50);
@@ -143,6 +147,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public void updateLastLoginTimeByUserName(String username) {
         userMapper.updateLastLoginTimeByUsername(new Date(), username);
+    }
+
+    @Override
+    public void updateGroupIdByUsername(String username, Integer groupId) {
+        userMapper.updateGroupIdByUsername(groupId, username);
+    }
+
+    @Override
+    public User selectOneById(Integer id) {
+        return userMapper.selectOneById(id);
+    }
+
+    @Override
+    public boolean UpdateUserInfo(User userInfo, Integer userId) {
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<User>();
+        int id = userMapper.update(userInfo, updateWrapper.eq("id", userId));
+        return id > 0;
     }
 }
 

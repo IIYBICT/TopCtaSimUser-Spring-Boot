@@ -1,10 +1,10 @@
 package top.ctasim.user.mapper;
-import java.util.Date;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import top.ctasim.user.entity.ActivateEmail;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,6 +25,8 @@ public interface ActivateEmailMapper extends BaseMapper<ActivateEmail> {
     int updateIsActivateBySjs(@Param("isActivate") Integer isActivate, @Param("sjs") String sjs);
 
     int updateExpireTimeAndSjsByEmail(@Param("expireTime") Date expireTime, @Param("sjs") String sjs, @Param("email") String email);
+
+    int delByEmail(@Param("email") String email);
 }
 
 
