@@ -24,6 +24,9 @@ import top.ctasim.user.utils.ResultJson;
 import javax.annotation.Resource;
 import java.util.*;
 
+/**
+ * @author IIYBICT
+ */
 @RestController
 @RequestMapping("/admin")
 @ResponseBody
@@ -54,7 +57,7 @@ public class AdminController {
     private String activateUrl;
 
     @GetMapping("/get/user/list")
-    public ResultJson GetUserList(
+    public ResultJson getUserList(
             String token
     ) {
         if (!userService.selectUserLoginExpireByUserIdAndToken(token)) {
@@ -117,7 +120,7 @@ public class AdminController {
     }
 
     @GetMapping("/get/user/info")
-    public ResultJson GetUserInfo(String token, Integer userId) {
+    public ResultJson getUserInfo(String token, Integer userId) {
         if (!userService.selectUserLoginExpireByUserIdAndToken(token)) {
             return ResultJson.error().message("未登录或已token失效，请重新登录").code(202);
         }
@@ -147,7 +150,6 @@ public class AdminController {
         for (String item : certList) {
             String[] itemInfo = item.split(" ");
             if (itemInfo[0].equals(user.getUserCall())) {
-//                data.put("activateCall", new Integer(itemInfo[2].trim()));
                 for (String ratingItem : ratingList) {
                     String[] ratingItemInfo = ratingItem.split(" ");
 
@@ -160,7 +162,6 @@ public class AdminController {
             }
 
         }
-//        data.putIfAbsent("activateCall", null);
         data.putIfAbsent("ratingId", null);
         data.putIfAbsent("ratingName", null);
         data.putIfAbsent("ratingNameEn", null);
@@ -171,7 +172,7 @@ public class AdminController {
     }
 
     @GetMapping("/get/group/list")
-    public ResultJson GetGroupList(String token) {
+    public ResultJson getGroupList(String token) {
         if (!userService.selectUserLoginExpireByUserIdAndToken(token)) {
             return ResultJson.error().message("未登录或已token失效，请重新登录").code(202);
         }
@@ -189,17 +190,7 @@ public class AdminController {
     }
 
     @PostMapping("/update/user/info")
-    public ResultJson UpdateUserInfo(
-            String token,
-            Integer userId,
-            String userCall,
-            String password,
-            String username,
-            String email,
-            String qq,
-            Integer groupId,
-            Integer ratingId
-    ) {
+    public ResultJson updateUserInfo(String token,Integer userId,String userCall,String password,String username,String email,String qq,Integer groupId,Integer ratingId) {
         if (!userService.selectUserLoginExpireByUserIdAndToken(token)) {
             return ResultJson.error().message("未登录或已token失效，请重新登录").code(202);
         }
@@ -233,38 +224,35 @@ public class AdminController {
             activateEmail.setIsActivate(0);
             activateEmail.setExpireTime(newDate2);
             activateEmailService.save(activateEmail);
-            ThreadUtil.execute(new Runnable() {
-                @Override
-                public void run() {
-                    Context context = new Context();
-                    Map<String, Object> emailParam = new HashMap<>();
-                    emailParam.put("username", user.getUsername());
-                    emailParam.put("call", user.getUserCall());
-                    emailParam.put("email", user.getEmail());
-                    emailParam.put("url", activateUrl + sjs);
-                    context.setVariable("emailParam", emailParam);
-                    String emailTemplate = templateEngine.process("mail/ActivateEmail", context);
-                    MailUtil.send(email, "CTAsim用户中心邮箱验证", emailTemplate, true);
-                }
+            ThreadUtil.execute(() -> {
+                Context context = new Context();
+                Map<String, Object> emailParam = new HashMap<>();
+                emailParam.put("username", user.getUsername());
+                emailParam.put("call", user.getUserCall());
+                emailParam.put("email", user.getEmail());
+                emailParam.put("url", activateUrl + sjs);
+                context.setVariable("emailParam", emailParam);
+                String emailTemplate = templateEngine.process("mail/ActivateEmail", context);
+                MailUtil.send(email, "CTAsim用户中心邮箱验证", emailTemplate, true);
             });
         }
 
         FileReader fileReader = new FileReader(FileUtil.file(confPath + "cert.txt"));
         String result = fileReader.readString();
-        String certData = "";
+        StringBuilder certData = new StringBuilder();
         String[] split = result.split("\r\n");
         for (String item : split) {
-            String itemData = "";
+            String itemData;
             String[] data = item.split(" ");
             if (data[0].equals(userCall)) {
                 itemData = data[0] + " " + data[1] + " " + ratingId + "\r\n";
             } else {
                 itemData = data[0] + " " + data[1] + " " + data[2] + "\r\n";
             }
-            certData += itemData;
+            certData.append(itemData);
         }
         FileWriter writer = new FileWriter(FileUtil.file(confPath + "cert.txt"));
-        writer.write(certData);
+        writer.write(certData.toString());
 
         User userInfo = new User();
         userInfo.setUserCall(userCall);
@@ -282,7 +270,7 @@ public class AdminController {
     }
 
     @GetMapping("/get/rating/list")
-    public ResultJson GetRatingList(String token) {
+    public ResultJson getRatingList(String token) {
         if (!userService.selectUserLoginExpireByUserIdAndToken(token)) {
             return ResultJson.error().message("未登录或已token失效，请重新登录").code(202);
         }
@@ -297,7 +285,7 @@ public class AdminController {
         }
         FileReader fileReader = new FileReader(FileUtil.file(rootPath + "rating.txt"));
         String result = fileReader.readString();
-        List<Rating> RatingData = new ArrayList<>();
+        List<Rating> ratingData = new ArrayList<>();
         String[] split = result.split("\r\n");
         for (String item : split) {
             String[] data = item.split(" ");
@@ -305,9 +293,9 @@ public class AdminController {
             rating.setId(Integer.valueOf(data[0]));
             rating.setName(data[2]);
             rating.setNameEn(data[1]);
-            RatingData.add(rating);
+            ratingData.add(rating);
         }
-        return ResultJson.ok().data("data", RatingData);
+        return ResultJson.ok().data("data", ratingData);
     }
 
 }
