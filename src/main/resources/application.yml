@@ -9,15 +9,12 @@ spring:
       datasource:
         mysql1:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          #          url: jdbc:mysql://47.242.29.26:3306/cta2?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
-          #          username: cta2
-          #          password: XcXHWSfL5NfYfjsa
-          url: jdbc:mysql://127.0.0.1:3306/cta2?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
-          username: cta2
-          password: XcXHWSfL5NfYfjsa
-#          url: jdbc:mysql://127.0.0.1:3306/cta?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
-#          username: root
-#          password: 12345678
+#          url: jdbc:mysql://127.0.0.1:3306/cta2?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+#          username: cta2
+#          password: XcXHWSfL5NfYfjsa
+          url: jdbc:mysql://127.0.0.1:3306/cta?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+          username: root
+          password:
 
 mybatis-plus:
   configuration:
